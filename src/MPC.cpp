@@ -45,8 +45,8 @@ class FG_eval {
 
     // Reference state cost
     for (int t = 0; t < N; t++) {
-      fg[0] += 2000 * CppAD::pow(vars[cte_start + t], 2);
-      fg[0] += 2000 * CppAD::pow(vars[epsi_start + t], 2);
+      fg[0] += 1000 * CppAD::pow(vars[cte_start + t], 2);
+      fg[0] += 1000 * CppAD::pow(vars[epsi_start + t], 2);
       fg[0] += CppAD::pow(vars[v_start + t] - ref_v, 2);
     }
 
@@ -58,7 +58,7 @@ class FG_eval {
 
     // Sequential actuations cost
     for (int t = 0; t < N - 2; t++) {
-      fg[0] += 200 * CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
+      fg[0] += 500 * CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
       fg[0] += 10 * CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
     }
 
