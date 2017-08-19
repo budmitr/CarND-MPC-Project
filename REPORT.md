@@ -20,7 +20,7 @@ where `psides` is desirable direction value for `psi` angle,
 
 There are only 2 actuators for this simple model: `throttle` and `steering_angle`.
 `throttle` might have negative values, which correspond to pushig the break.
-In this project steering angle is limited by 25 degrees and acceleration is limited to keep 40mph speed.
+In this project steering angle is limited by 25 degrees and acceleration is limited to keep 60mph speed.
 
 # `N` and `dt` params
 
@@ -44,8 +44,12 @@ For this I used formulas from Q&A session:
 
 # Latency
 
-As part of checking `N` and `dt` params I realized that latency of 100 can be handled by precise enough estimation
-for >100ms timeframe.
-Selected `N` and `dt` params were tested under latency conditions to ensure that the vehicle moves slow enough
-to predict the way for ~1 second ahead.
-Faster speed / or smaller `N` or `dt` values will cause worse road behaviour
+To handle 100ms latency, on every data processing step I first shift `px` and `py` positions predicting car location
+in 100ms future.
+
+    px = px + v * cos(psi) * latency;
+    py = py + v * sin(psi) * latency;
+    psi = psi - v * steer_value / Lf * latency;
+    v += throttle_value * latency;
+
+This is done before polynom preprocessing, so subsequent code, adjusted to have 0-values for `x`, `y` and `psi`, is the same
